@@ -1,0 +1,106 @@
+{
+    "manifestVersion": 1,
+    "id": "repo-dependency-mapper",
+    "version": "1.0.0",
+    "name": "Repository Dependency Mapper",
+    "description": "Scans repositories for cross-repo dependencies (NuGet, npm, Go modules, Docker, API calls, databases, infrastructure) and visualizes deployment ordering.",
+    "publisher": "adam-wheater",
+    "categories": [
+        "Azure Repos"
+    ],
+    "tags": [
+        "dependencies",
+        "repos",
+        "graph",
+        "nuget",
+        "deployment",
+        "visualization",
+        "cycle-detection",
+        "infrastructure"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "icons": {
+        "default": "static/icon.png"
+    },
+    "screenshots": [
+        { "path": "static/screenshots/overview.png" },
+        { "path": "static/screenshots/details.png" },
+        { "path": "static/screenshots/dependents.png" },
+        { "path": "static/screenshots/deployment-order.png" }
+    ],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        },
+        "license": {
+            "path": "LICENSE"
+        }
+    },
+    "links": {
+        "repository": {
+            "uri": "https://github.com/adam-wheater/azure-devops-repo-dependency-mapper"
+        },
+        "issues": {
+            "uri": "https://github.com/adam-wheater/azure-devops-repo-dependency-mapper/issues"
+        },
+        "support": {
+            "uri": "https://github.com/adam-wheater/azure-devops-repo-dependency-mapper/issues"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/adam-wheater/azure-devops-repo-dependency-mapper"
+    },
+    "branding": {
+        "color": "#0078d4",
+        "theme": "dark"
+    },
+    "galleryFlags": [
+        "Preview"
+    ],
+    "contributions": [
+        {
+            "id": "dependency-hub",
+            "type": "ms.vss-web.hub",
+            "description": "Repository Dependency Mapper hub under Repos",
+            "targets": [
+                "ms.vss-code-web.code-hub-group"
+            ],
+            "properties": {
+                "name": "Dependencies",
+                "order": 99,
+                "uri": "dist/DependencyHub/DependencyHub.html",
+                "icon": {
+                    "light": "static/icon.png",
+                    "dark": "static/icon.png"
+                }
+            }
+        }
+    ],
+    "scopes": [
+        "vso.code"
+    ],
+    "demands": [],
+    "files": [
+        {
+            "path": "dist",
+            "addressable": true
+        },
+        {
+            "path": "static",
+            "addressable": true
+        },
+        {
+            "path": "overview.md",
+            "addressable": true
+        },
+        {
+            "path": "LICENSE",
+            "addressable": true
+        }
+    ]
+}

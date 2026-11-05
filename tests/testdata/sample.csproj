@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>Contoso.SharedLib</PackageId>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Contoso.AuthService" Version="1.2.0" />
+    <PackageReference Include="Contoso.CommonModels" Version="2.0.0" />
+  </ItemGroup>
+</Project>

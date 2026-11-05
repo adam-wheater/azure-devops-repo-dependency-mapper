@@ -1,0 +1,480 @@
+/*
+ * Repository Dependency Mapper: the few rules the shared design system does not
+ * cover (the graph canvas, the three-column workspace, colour swatches). Colours
+ * come only from the --ax-* tokens in app.css, so light, dark and high contrast
+ * all keep working without changes here.
+ */
+
+/* ------------------------------------------------------- graph palette --- */
+
+/* One colour per dependency type and per language. Six chart tokens carry the
+   base hues; a type that needs its own shade mixes two of them. Every value is
+   resolved on .ax-root, so a theme change re-resolves the whole palette. Types
+   are always named in text beside the swatch, never told apart by colour alone. */
+.ax-root {
+  --dm-edge-nuget: var(--ax-chart-1);
+  --dm-edge-api: var(--ax-chart-3);
+  --dm-edge-database: var(--ax-chart-2);
+  --dm-edge-go-module: var(--ax-chart-6);
+  --dm-edge-infrastructure: var(--ax-chart-4);
+  --dm-edge-npm: color-mix(in srgb, var(--ax-chart-4) 60%, var(--ax-chart-5));
+  --dm-edge-docker: color-mix(in srgb, var(--ax-chart-1) 55%, var(--ax-chart-6));
+  --dm-edge-maven: color-mix(in srgb, var(--ax-chart-3) 55%, var(--ax-chart-4));
+  --dm-edge-python: color-mix(in srgb, var(--ax-chart-1) 50%, var(--ax-chart-5));
+  --dm-edge-helm: var(--ax-chart-5);
+  --dm-edge-app-config: color-mix(in srgb, var(--ax-chart-3) 50%, var(--ax-chart-2));
+  --dm-edge-service-usage: color-mix(in srgb, var(--ax-chart-5) 55%, var(--ax-chart-3));
+  --dm-edge-service-bus: color-mix(in srgb, var(--ax-chart-5) 55%, var(--ax-text-2));
+  --dm-edge-service-connection: color-mix(in srgb, var(--ax-chart-6) 55%, var(--ax-text-2));
+
+  --dm-lang-csharp: var(--ax-chart-5);
+  --dm-lang-go: var(--ax-chart-6);
+  --dm-lang-typescript: var(--ax-chart-1);
+  --dm-lang-java: var(--ax-chart-3);
+  --dm-lang-python: var(--ax-chart-2);
+  --dm-lang-unknown: var(--ax-text-4);
+
+  --dm-canvas: var(--ax-surface-2);
+  --dm-stage-h: clamp(440px, 72vh, 780px);
+}
+
+/* ------------------------------------------------------------ swatches -- */
+
+.dm-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex: none;
+}
+
+.dm-swatch--dot {
+  border-radius: 50%;
+}
+
+.dm-kbd {
+  display: inline-block;
+  padding: 0 6px;
+  font-family: var(--ax-mono);
+  font-size: 11px;
+  line-height: 18px;
+  color: var(--ax-text-2);
+  background: var(--ax-surface-2);
+  border: 1px solid var(--ax-border-strong);
+  border-radius: var(--ax-r-sm);
+}
+
+/* ----------------------------------------------------------- workspace --- */
+
+/* Filters | graph | details. The filter column sizes to its card so collapsing
+   it gives the width back to the graph. */
+.dm-workspace {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 340px;
+  gap: var(--ax-s4);
+  align-items: start;
+  margin-bottom: var(--ax-s5);
+}
+
+.dm-filters {
+  width: 248px;
+  max-height: var(--dm-stage-h);
+  overflow-y: auto;
+}
+
+.dm-filters--collapsed {
+  width: 56px;
+  overflow: hidden;
+}
+
+.dm-graph {
+  height: var(--dm-stage-h);
+  overflow: hidden;
+}
+
+.dm-details {
+  max-height: var(--dm-stage-h);
+  overflow-y: auto;
+}
+
+@media (max-width: 1100px) {
+  .dm-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dm-filters,
+  .dm-filters--collapsed {
+    width: auto;
+  }
+  .dm-filters,
+  .dm-details {
+    max-height: none;
+  }
+  .dm-graph {
+    order: -1;
+    height: 60vh;
+    min-height: 360px;
+  }
+}
+
+.dm-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ax-s2);
+  margin: var(--ax-s4) 0 var(--ax-s2);
+}
+
+.dm-group-head:first-child {
+  margin-top: 0;
+}
+
+.dm-group-head h3 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ax-text-2);
+}
+
+.dm-check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dm-check-list--scroll {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: var(--ax-s1);
+}
+
+/* -------------------------------------------------------------- canvas --- */
+
+.dm-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.dm-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--dm-canvas);
+}
+
+.dm-label {
+  font-family: var(--ax-font);
+  font-size: 11px;
+  fill: var(--ax-text);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.dm-overlay {
+  position: absolute;
+  top: var(--ax-s3);
+  right: var(--ax-s3);
+  display: flex;
+  gap: var(--ax-s1);
+}
+
+.dm-overlay-badge {
+  position: absolute;
+  top: var(--ax-s3);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dm-canvas-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.dm-legend {
+  position: absolute;
+  left: var(--ax-s3);
+  bottom: var(--ax-s3);
+  max-width: calc(100% - 2 * var(--ax-s3));
+  max-height: calc(100% - 2 * var(--ax-s3));
+  overflow: auto;
+  padding: var(--ax-s3);
+  font-size: 11.5px;
+  line-height: 18px;
+  background: var(--ax-surface);
+  border: 1px solid var(--ax-border);
+  border-radius: var(--ax-r-md);
+  box-shadow: var(--ax-shadow-2);
+}
+
+.dm-legend__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ax-s3);
+  font-weight: 650;
+}
+
+.dm-legend__cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ax-s3) var(--ax-s5);
+  margin-top: var(--ax-s2);
+}
+
+/* On a phone the Nodes key drops under the Edges key and runs in two columns,
+   so nothing is cut off at the right edge. */
+@media (max-width: 480px) {
+  .dm-legend__nodes {
+    columns: 2;
+    column-gap: var(--ax-s4);
+  }
+}
+
+.dm-legend__title {
+  margin: 0 0 var(--ax-s1);
+  font-size: 11.5px;
+  font-weight: 650;
+  color: var(--ax-text-2);
+}
+
+.dm-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.dm-legend__edges {
+  columns: 2;
+  column-gap: var(--ax-s4);
+}
+
+.dm-legend__edges .dm-legend__item {
+  break-inside: avoid;
+}
+
+.dm-legend__line {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+  flex: none;
+}
+
+/* ------------------------------------------------------ details panel --- */
+
+.dm-side-title {
+  margin: var(--ax-s4) 0 var(--ax-s2);
+  font-size: 12.5px;
+  font-weight: 650;
+  color: var(--ax-text-2);
+}
+
+.dm-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dm-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--ax-border-subtle);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.dm-list li:last-child {
+  border-bottom: 0;
+}
+
+.dm-list__meta {
+  font-size: 11.5px;
+  color: var(--ax-text-4);
+}
+
+.dm-link-button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ax-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.dm-note {
+  margin-top: var(--ax-s3);
+  padding: var(--ax-s3);
+  font-size: 12.5px;
+  background: var(--ax-surface-2);
+  border: 1px solid var(--ax-border-subtle);
+  border-radius: var(--ax-r-md);
+}
+
+.dm-node-title {
+  display: flex;
+  align-items: center;
+  gap: var(--ax-s2);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------- path finder ---- */
+
+.dm-path-field {
+  display: flex;
+  align-items: center;
+  gap: var(--ax-s2);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ax-text-2);
+}
+
+.dm-path-field .ax-select {
+  min-width: 180px;
+  font-weight: 400;
+}
+
+.dm-paths {
+  max-height: 220px;
+  overflow-y: auto;
+  margin-top: var(--ax-s2);
+}
+
+.dm-path {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: var(--ax-r-sm);
+  font-size: 12.5px;
+}
+
+.dm-path:nth-child(odd) {
+  background: var(--ax-surface-2);
+}
+
+.dm-path__end {
+  font-weight: 650;
+}
+
+.dm-path svg {
+  color: var(--ax-text-4);
+}
+
+/* ---------------------------------------------------- deployment order --- */
+
+.dm-tiers {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ax-s4);
+  max-height: 340px;
+  overflow: auto;
+  padding-bottom: var(--ax-s2);
+}
+
+.dm-tier,
+.dm-cycles {
+  flex: none;
+  min-width: 200px;
+}
+
+.dm-cycles {
+  min-width: 280px;
+  overflow-wrap: anywhere;
+}
+
+.dm-tier {
+  padding: var(--ax-s3);
+  background: var(--ax-surface-2);
+  border: 1px solid var(--ax-border-subtle);
+  border-radius: var(--ax-r-md);
+}
+
+.dm-tier__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ax-s2);
+  margin-bottom: var(--ax-s2);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.dm-repo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  font-size: 12.5px;
+  background: var(--ax-surface);
+  border: 1px solid var(--ax-border-subtle);
+  border-radius: var(--ax-r-sm);
+}
+
+.dm-cycles__title {
+  margin: 0 0 var(--ax-s2);
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ax-danger);
+}
+
+.dm-cycle {
+  margin-bottom: var(--ax-s2);
+  padding: var(--ax-s3);
+  font-size: 12.5px;
+  background: var(--ax-danger-bg);
+  border: 1px solid var(--ax-danger);
+  border-radius: var(--ax-r-md);
+}
+
+.dm-cycle__break {
+  margin-top: var(--ax-s2);
+  padding: 6px 8px;
+  font-size: 12px;
+  background: var(--ax-warn-bg);
+  border: 1px solid var(--ax-warn);
+  border-radius: var(--ax-r-sm);
+}
+
+/* ------------------------------------------------------------ progress --- */
+
+.dm-failed-list {
+  margin: var(--ax-s2) 0 0;
+  padding-left: var(--ax-s5);
+  font-size: 12px;
+  color: var(--ax-danger);
+}
+
+.dm-toolbar-card .ax-card__body {
+  padding: var(--ax-s3) var(--ax-s4);
+}
+
+.dm-toolbar-card .ax-toolbar {
+  margin-bottom: 0;
+}
+
+.dm-toolbar-card .ax-toolbar__group {
+  flex-wrap: wrap;
+}
+
+.dm-shortcuts {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dm-shortcuts td {
+  padding: 6px 12px 6px 0;
+}
+
+.dm-flip {
+  transform: rotate(180deg);
+}

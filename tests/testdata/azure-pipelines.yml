@@ -1,0 +1,43 @@
+trigger:
+  - main
+
+resources:
+  repositories:
+    - repository: shared-templates
+      type: git
+      name: shared-templates
+
+pool:
+  vmImage: "ubuntu-latest"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndTest
+        steps:
+          - checkout: self
+          - checkout: shared-templates
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: build
+
+  - stage: Deploy
+    jobs:
+      - job: DeployWeb
+        steps:
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: "my-sub"
+              appName: "order-api"
+              package: "$(Build.ArtifactStagingDirectory)/**/*.zip"
+
+      - job: DeployFunc
+        steps:
+          - task: AzureFunctionApp@2
+            inputs:
+              azureSubscription: "my-sub"
+              appName: "order-processor-func"
+
+      - template: deploy/k8s-deploy.yml@shared-templates
+        parameters:
+          cluster: "aks-production"

@@ -1,0 +1,52 @@
+[
+  {
+    "name": "overview",
+    "steps": [
+      { "click": "role=button[name='Collapse filters']" },
+      { "click": ".dm-legend__head button" },
+      { "click": "role=button[name=/Scan all repos/]" },
+      { "waitFor": "text=Average degree" },
+      { "wait": 6000 }
+    ]
+  },
+  {
+    "name": "details",
+    "steps": [
+      { "click": "role=button[name='Collapse filters']" },
+      { "click": ".dm-legend__head button" },
+      { "click": "role=button[name=/Scan all repos/]" },
+      { "waitFor": "text=Average degree" },
+      { "wait": 6000 },
+      { "click": ".dm-svg .nodes circle >> nth=8" },
+      { "wait": 4000 },
+      { "click": "role=button[name=/Analyze Impact/]" }
+    ],
+    "height": 1100,
+    "selector": ".dm-workspace"
+  },
+  {
+    "name": "dependents",
+    "steps": [
+      { "click": "role=button[name='Collapse filters']" },
+      { "click": ".dm-legend__head button" },
+      { "click": "role=button[name=/Scan all repos/]" },
+      { "waitFor": "text=Average degree" },
+      { "wait": 6000 },
+      { "click": "role=button[name=/Dependents/]" },
+      { "fill": "input[aria-label='Search for dependents']", "value": "orders-api" },
+      { "wait": 800 }
+    ]
+  },
+  {
+    "name": "deployment-order",
+    "steps": [
+      { "click": "role=button[name=/Scan all repos/]" },
+      { "waitFor": "text=Average degree" },
+      { "wait": 1000 },
+      { "click": "role=button[name=/Deployment Order/]" },
+      { "wait": 300 }
+    ],
+    "width": 1600,
+    "selector": ".ax-section:has(.dm-tiers)"
+  }
+]
